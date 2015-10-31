@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Results</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" type="text/css" href="results_css.css">
+        <script src="jquery-1.11.2.min.js"></script>
+        <script>
+
+            function loadXMLDoc(xmlfile)
+            {
+                if (window.XMLHttpRequest)
+                {
+                    xhttp = new XMLHttpRequest();
+                }
+                else // code for IE5 and IE6
+                {
+                    xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                xhttp.open("GET", xmlfile, false);
+                xhttp.send();
+
+                return xhttp.responseXML;
+
+            }
+
+            function results()
+            {
+
+                var results_xml_mult, results_xml_add, results_xml_comp;
+                var xml_info = loadXMLDoc("information.xml");
+                var choise_info = xml_info.getElementsByTagName("choise");
+                
+
+                for (y = 0; y < choise_info.length; y++) {
+                    if (choise_info[y].childNodes[0].nodeValue === "1") {
+                        results_xml_mult = loadXMLDoc("multiplicative.xml");
+                        showXML(results_xml_mult, "Multiplicative");
+                    }
+                    if (choise_info[y].childNodes[0].nodeValue === "2") {
+                        results_xml_add = loadXMLDoc("additive.xml");
+                        showXML(results_xml_add, "Additive");
+                    }
+                    if (choise_info[y].childNodes[0].nodeValue === "3") {
+                        results_xml_comp = loadXMLDoc("composition.xml");
+                        showXML(results_xml_comp, "Composition");
+                    }
+                }
+
+            }
+
+            function showXML(xmlDoc, model) {
+
+                var x = xmlDoc.getElementsByTagName("DMUs");
+                var rows = x[0].childNodes[0].nodeValue;
+                var y = xmlDoc.getElementsByTagName("columns");
+                var cols = y[0].childNodes[0].nodeValue;
+                
+                var lower_w = xmlDoc.getElementsByTagName("lower_weight");
+                var lower_weight = lower_w[0].childNodes[0].nodeValue;
+                
+                var cell_aux = xmlDoc.getElementsByTagName("cell");
+
+                var total = rows * cols;
+                var newline = cols;
+
+                var number = 1;
+                var txt = "";
+                var thead = "";
+
+                //The head of table
+                for (i = 1; i < cols; i++) {
+                    thead = thead + "<td>" + cell_aux[i].childNodes[0].nodeValue + "</td>";
+                }
+
+                //This loop continues where the previous loop ends
+                for (i = cols; i < total; i++) {
+
+                    if (newline === cols) {
+                        if (number % 2 === 1) {
+                            txt = txt + "<tr><td>" + number + ".</td>";
+                            number = number + 1;
+                        }
+                        else {
+                            txt = txt + "<tr class='even_line'><td>" + number + ".</td>";
+                            number = number + 1;
+                        }
+                    }
+                    txt = txt + "<td>" + cell_aux[i].childNodes[0].nodeValue + "</td>";
+
+                    newline = newline - 1;
+
+                    if (newline === 0) {
+                        txt = txt + "</tr>";
+                        newline = cols;
+                    }
+                }
+
+                var start_txt = "<b>" + model + " Model Results</b><br/><br/>\n\
+        <i>The lower level for all weights was: " + lower_weight + "</i><br/><br/><table><tr class='even_line'><td> </td><td>DMU</td>";
+                var thead_end = "</tr>";
+                var end_txt = "</table><br/>";
+
+                var i = 0;
+                var k = 0;
+
+                $("#" + model).html(start_txt + thead + thead_end + txt + end_txt);
+
+                //$("#nav").height($("#section").height());
+            }
+
+
+        </script>
+
+    </head>
+
+    <body onload="results()">
+        <div id="header">
+            <h1>Efficiency Computation</h1>
+        </div>
+
+        <div id="nav" >
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="page_mult.html">Multiplicative Model</a></li>
+                <li><a href="page_add.html">Additive Model</a></li>
+                <li><a href="page_com.html">Composition Model</a></li>
+                <li><a href="aboutproject.html">About</a></li>
+            </ul>
+        </div>
+        <div id="section">
+
+
+            <div id="Multiplicative"></div>
+            <div id="Additive"></div>
+            <div id="Composition"></div>
+
+            <br/>
+
+            <a href="Lp_first">Downlaod Results</a>
+
+            <br/>
+            <br/>
+
+        </div>
+
+    </body>
+</html>

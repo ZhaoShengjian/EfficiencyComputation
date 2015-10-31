@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" type="text/css" href="maincss.css">
+
+        <title>Efficiency Computation</title>
+
+        <script src="jquery-1.11.2.min.js"></script>
+        <script>
+            $(document).ready(function () {
+
+                $("#file_upload").change(function () {
+
+                    var file_name = document.getElementById("file_upload").value;
+                    var file_extention = file_name.split(".").pop();
+                    //var checking = document.getElementsByName("check");
+                    var checkOK = checked();
+                    var fileOK = false;
+                    //Checking file's extention.
+                    if (file_extention !== "xlsx") {
+                        $("#warning_xlsx").show();
+                    } else {
+                        $("#warning_xlsx").hide();
+                        fileOK = true;
+                    }
+
+                    //Checking if user choose a model. If not the SUBMIT button stay disabled.
+
+                    if (fileOK && checkOK) {
+                        $("#submit_b").attr("disabled", false);
+                    } else {
+                        $("#submit_b").attr("disabled", true);
+                    }
+                });
+
+                $("#lower_w").keypress(function (e) {
+                    /*called when key is pressed in textbox
+                     * 8: backspace
+                     * 46: delete
+                     * 190: period
+                     */
+                    if (e.which === 8 || e.which === 46 || e.which === 190) {
+                        return true;
+                    }
+                    //if the letter is not digit then display error and don't type anything
+                    if (e.which !== 8 && e.which !== 0 && (e.which < 48 || e.which > 57)) {
+                        //display error message
+                        $("#errmsg").html("Digits Only").show().fadeOut("slow");
+                        return false;
+                    }
+                });
+
+            });
+
+            function checked() {
+                var checking = document.getElementsByName("check");
+                //Checking if user choose a model. If not the SUBMIT button stay disabled.
+
+                for (i = 0; i < 3; i++) {
+                    if (checking[i].checked === true) {
+                        checkOK = true;
+                        $("#warning_check").hide();
+                        //Jump out...!
+                        break;
+                    } else {
+                        checkOK = false;
+                        $("#warning_check").show();
+                    }
+                }
+                return checkOK;
+            }
+
+            //called when key is pressed in textbox
+
+
+
+
+
+        </script>
+
+    </head>
+
+    <body>
+        <div id="father">
+            <div id="header">
+                <h1>Efficiency Computation</h1>
+            </div>
+
+            <div id="nav" >
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="page_mult.html">Multiplicative Model</a></li>
+                    <li><a href="page_add.html">Additive Model</a></li>
+                    <li><a href="page_com.html">Composition Model</a></li>
+                    <li><a href="aboutproject.html">About</a></li>
+                </ul>
+            </div>
+
+            <div id="foto">
+                <img src="images/DMUsmall.png" alt="oups...!">
+            </div>
+
+
+
+            <div id="section">
+
+
+                <p>In this software we implement 2-stage DEA approaches under the assumption of a series
+                    relationship between the two stages. </p>
+                <p>A two-stage production process assumes that the first stage
+                    transforms external inputs to a number of intermediate measures, which then are used as inputs to the
+                    second stage that produces the final outputs.</p>
+
+                <h3>Instructions</h3>
+                <p>Please, follow the instructions bellow in order to have the correct results:</p>
+                <p><b>1: </b>Create an excel file and save it as .xlsx.
+                    <i>(Note: this application will not accept any other file formats)</i></p>
+
+                <p><b>2: </b>The data in the excel file should be placed as representing at the example bellow:</p>
+
+
+                <ol type="I">
+                    <li>The file's content should be placed at top-left area, starting from the first excel cell (A1). </li>
+                    <li>At the first column of the file (blue area) should be the name of each Decision Making Unit (DMU).</li>
+                    <li>At the first row (grey area) should be the name of each variable.</li>
+                    <li>At the rest of the file (white area) should be the measured data. <i>(Warning: Only numbers accepted)</i></li>
+                    <li>The variables and the number of DMUs defines a rectangle. Please, do not add content out 
+                        of this rectangle.</li>
+
+                </ol>
+                <b>Do not leave any cell without content!</b>
+
+                <figure>
+                    <img src="images/explain-final.JPG" alt="explain-grey">
+                    <figcaption><i>Example</i></figcaption>
+                </figure>
+
+                <div id="form-main-div">
+                    <div id="form-div">
+
+                        <form name="form1" action="Lp_first" method="post" enctype="multipart/form-data" >
+
+                            <fieldset>
+                                <legend>Select model and upload your file</legend>
+
+                                <div id="checkbox_area">
+                                    <input type="checkbox" name="check" value="1"/> Multiplicative Model
+                                    <br>
+                                    <input type="checkbox" name="check" value="2"/> Additive Model 
+                                    <br>
+                                    <input type="checkbox" name="check" value="3"/> Composition Model
+                                    <br>
+                                </div>
+
+
+                                <p>Check the number of each variable:</p>
+                                <table>
+
+                                    <tr><td>X:
+                                            <select name="variables">
+                                                <option value="1">1</option>
+                                                <option value="2" selected="selected">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                            </select></td><td>
+                                            Z: 
+                                            <select name="variables">
+                                                <option value="1">1</option>
+                                                <option value="2" selected="selected">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                            </select></td><td>
+                                            Y:
+                                            <select name="variables">
+                                                <option value="1">1</option>
+                                                <option value="2" selected="selected">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                            </select></td></tr>
+
+                                </table>
+                                <br/>
+                                Set lower level for all weights: 
+                                <input id="lower_w" type="text" name="lower_weight" size="10" maxlength="12" value="0">
+                                <span id="errmsg"></span>
+                                <br/>
+                                <br/>
+
+                                <input id="file_upload" name="file" type="file">
+
+
+                                <br/><br/>
+                                <input id="submit_b" name="submit_button" type="submit" value="SUBMIT" disabled="">
+
+                            </fieldset>
+                        </form>
+                    </div>
+                    <div id="warning-div">
+                        <img id="warning_check" src="images/warning.png" alt="problem!" hidden="">
+                        <img id="warning_xlsx" src="images/not_xlsx.png" alt="problem with the file" hidden="">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </body>
+</html>
+
